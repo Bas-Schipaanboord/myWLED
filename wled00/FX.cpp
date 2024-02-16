@@ -398,6 +398,15 @@ uint16_t scan(bool dual)
   return FRAMETIME;
 }
 
+/*
+ * Beacons of Minas Tirith
+ */
+uint16_t mode_beaconsminastirith(void) {
+    // Testing with blink for now:
+    return blink(SEGCOLOR(0), SEGCOLOR(1), false, true);
+}
+static const char _data_FX_MODE_BEACONSMINASTIRITH[] PROGMEM = "Beacons Of Minas Tirith@!;1,2,3;!";
+
 
 /*
  * Runs a single pixel back and forth.
@@ -7849,6 +7858,7 @@ void WS2812FX::setupEffectData() {
 
   addEffect(FX_MODE_WAVESINS, &mode_wavesins, _data_FX_MODE_WAVESINS);
   addEffect(FX_MODE_ROCKTAVES, &mode_rocktaves, _data_FX_MODE_ROCKTAVES);
+  addEffect(FX_MODE_BEACONSMINASTIRITH, &mode_beaconsminastirith, _data_FX_MODE_BEACONSMINASTIRITH);
 
   // --- 2D  effects ---
 #ifndef WLED_DISABLE_2D
