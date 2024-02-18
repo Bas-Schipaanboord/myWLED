@@ -398,14 +398,46 @@ uint16_t scan(bool dual)
   return FRAMETIME;
 }
 
+
 /*
  * Beacons of Minas Tirith
  */
 uint16_t mode_beaconsminastirith(void) {
-    // Testing with blink for now:
-    return blink(SEGCOLOR(0), SEGCOLOR(1), false, true);
+  uint32_t cycleTime = 750 + (255 - SEGMENT.speed)*150;
+  uint32_t perc = strip.now % cycleTime;
+  uint16_t prog = (perc * 65535) / cycleTime;
+  bool beacon_phase = (prog < 32767);
+
+  // These are the LED positions of my mountain peaks
+  std::vector<int> beacons = {13, 39, 203, 81, 166, 116};
+
+  uint16_t step_size = 32767 / (beacons.size() + 1);
+  uint16_t show_num_beacons = prog / step_size;
+  uint8_t beacon_size = SEGMENT.intensity / 52;
+
+  if (beacon_phase){
+    // Light the beacons on the mountain peaks
+    if (show_num_beacons == 0){
+      SEGMENT.fill(BLACK);
+    }
+    for (int i = 0; i < show_num_beacons; i++){
+      SEGMENT.setPixelColor(beacons[i], SEGCOLOR(0));
+      for (int j = 0; j < beacon_size; j++){
+        SEGMENT.setPixelColor(beacons[i]-j, SEGCOLOR(0));
+        SEGMENT.setPixelColor(beacons[i]+j, SEGCOLOR(0));
+      }
+    }
+  } else {
+    // The riders of Rohan are coming!
+    prog -= 32767;
+    uint16_t offset = SEGLEN - (prog * SEGLEN) / 32767;
+    for (int i = offset; i < SEGLEN; i++){
+      SEGMENT.setPixelColor(i, SEGCOLOR(1));
+    }
+  }
+  return FRAMETIME;
 }
-static const char _data_FX_MODE_BEACONSMINASTIRITH[] PROGMEM = "Beacons Of Minas Tirith@!;1,2,3;!";
+static const char _data_FX_MODE_BEACONSMINASTIRITH[] PROGMEM = "Beacons Of Minas Tirith@!,!;1,2;";
 
 
 /*
