@@ -410,6 +410,8 @@ uint16_t mode_beaconsminastirith(void) {
 
   // These are the LED positions of my mountain peaks
   std::vector<int> beacons = {13, 39, 203, 81, 166, 116};
+  uint16_t top_len = 142;
+  uint16_t bottom_len = SEGLEN - top_len; 
 
   uint16_t step_size = 32767 / (beacons.size() + 1);
   uint16_t show_num_beacons = prog / step_size;
@@ -430,8 +432,16 @@ uint16_t mode_beaconsminastirith(void) {
   } else {
     // The riders of Rohan are coming!
     prog -= 32767;
-    uint16_t offset = SEGLEN - (prog * SEGLEN) / 32767;
-    for (int i = offset; i < SEGLEN; i++){
+
+    // Turn on LED's for top mountain ridge
+    uint16_t offset_top = top_len - (prog * top_len) / 32767;
+    for (int i = offset_top; i < top_len; i++){
+      SEGMENT.setPixelColor(i, SEGCOLOR(1));
+    }
+
+    // Turn on LED's for bottom mountain ridge
+    uint16_t offset_bottom = top_len + (prog * bottom_len) / 32767;
+    for (int i = top_len; i < offset_bottom; i++){
       SEGMENT.setPixelColor(i, SEGCOLOR(1));
     }
   }
