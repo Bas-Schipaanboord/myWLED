@@ -432,16 +432,9 @@ uint16_t mode_beaconsminastirith(void) {
   } else {
     // The riders of Rohan are coming!
     prog -= 32767;
-
-    // Turn on LED's for top mountain ridge
     uint16_t offset_top = top_len - (prog * top_len) / 32767;
-    for (int i = offset_top; i < top_len; i++){
-      SEGMENT.setPixelColor(i, SEGCOLOR(1));
-    }
-
-    // Turn on LED's for bottom mountain ridge
     uint16_t offset_bottom = top_len + (prog * bottom_len) / 32767;
-    for (int i = top_len; i < offset_bottom; i++){
+    for (int i = offset_top; i < offset_bottom; i++){
       SEGMENT.setPixelColor(i, SEGCOLOR(1));
     }
   }
